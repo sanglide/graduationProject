@@ -36,7 +36,7 @@ $(document).ready(function () {
                     else {
                         //观众
                         sessionStorage.setItem('role', 'user');
-                        window.location.href = "/user/home"
+                        window.location.href = "/user/start"
                     }
                 } else {
                     alertWin(res.message);

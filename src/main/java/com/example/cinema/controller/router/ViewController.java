@@ -15,6 +15,19 @@ public class ViewController {
         return "index";
     }
 
+    @RequestMapping(value = "/user/start")
+    public String getSrart() {
+        return "start";
+    }
+    @RequestMapping(value = "/user/startSelect")
+    public String getSelect() {
+        return "startSelect";
+    }
+    @RequestMapping(value = "/user/startTalking")
+    public String getTalking() {
+        return "startTalking";
+    }
+
     @RequestMapping(value = "/signUp")
     public String getSignUp() {
         return "signUp";
