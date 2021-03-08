@@ -18,6 +18,11 @@ function playMusic(){
     fileReader.readAsArrayBuffer(this.files[0]);
 }
 function record() {
+    let startButton=document.getElementById("start-button");                 // 先导航到INPUT标签
+    let endButton=document.getElementById("end-button");
+    startButton.setAttribute("disabled","disabled")
+    endButton.removeAttribute("disabled")
+
     window.navigator.mediaDevices.getUserMedia({
         audio:true
     }).then(mediaStream =>{
@@ -139,6 +144,7 @@ function playRecord (arrayBuffer) {
     document.querySelector('.audio-node').src = blobUrl;
 }
 function saveContent (content, fileName) {
+    console.log(content.toString())
     let aTag = document.createElement('a');
     aTag.setAttribute('download',fileName);
     let blob = new Blob([content],{type:""});
@@ -146,4 +152,76 @@ function saveContent (content, fileName) {
     document.body.appendChild(aTag);
     aTag.click();
     document.body.removeChild(aTag);
+    console.log(aTag)
+
+
+
+    // let formData = new FormData();
+    // formData.append("blobRe", blob);  // 文件名
+    // formData.append("test1","aa")
+    // console.log(formData.get("blobRe"))
+    // console.log(formData.get("test1"))
+    //
+    //
+    // postRequest(
+    //     '/talking/upload',
+    //     formData,
+    //     function (res) {
+    //         console.log("成功调用保存方法")
+    //     },
+    //     function (error) {
+    //         alert(error);
+    //     });
+
+    var formData = new FormData();
+    formData.append("multipartFile",blob);
+    console.log(formData);
+    console.log(formData.get("multipartFile"));
+
+    $.ajax({
+        type: 'POST',
+        url: "/talking/upload",
+        data: formData,
+        contentType: false,
+        processData: false,
+        cache: false,
+        // dataType:"json",
+        // mimeType:"multipart/form-data",
+        // xhr: function(){
+        //     var myXhr = $.ajaxSettings.xhr();
+        //     //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
+        //     if(myXhr.upload){
+        //         //绑定progress事件的回调函数
+        //         myXhr.upload.addEventListener('progress',handleProgress, false);
+        //     }
+        //     //xhr对象返回给jQuery使用
+        //     return myXhr;
+        // },
+
+        success: function (data) {
+            viewWord(data)
+            // if(mess==="returnToIndex"){
+            //     window.location.href="/user/oasisindex"
+            // }
+            // if(mess==="returnToError"){
+            //     window.location.href="/user/oasisUploadError"
+            // }
+            //
+            // if(mess==="returnToUpload"){
+            //     window.location.href="/user/oasisUpload"
+            // }
+        },
+        error: function (error) {
+            alert("请刷新一遍重新录制，试一试说短一点~~");
+
+        }
+    });
+
+
+}
+
+function viewWord(word){
+    console.log(word);
+    let str="<p>"+word+"</p>"
+    $('#word-container').html(str);
 }

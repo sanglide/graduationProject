@@ -22,8 +22,11 @@
 <body>
 <!--    <input type="file" onchange="playMusic.call(this)" class="select-file">-->
     <audio class="audio-node" autoplay></audio>
-    <button onclick="record()">开始录音</button>
-    <button onclick="stopRecord()">停止录音</button>
+    <button id="start-button" class="btn btn-lg btn-primary" onclick="record()">开始录音</button>
+    <button id="end-button" class="btn btn-lg btn-primary" disabled="disabled" onclick="stopRecord()">停止录音</button>
+<div id="result-container">
+    <div id="word-container"></div>
+</div>
 <!--    <a href="start.html">拍照</a>-->
 </body>
 
