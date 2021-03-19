@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css"/>
     <!-- font-asesome图标库 -->
     <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/startTalking.css"/>
 
     <!-- jquery -->
     <script src="/js/jquery.js"></script>
@@ -20,10 +21,12 @@
     <script src="/js/index1.js"></script>
 </head>
 <body>
+<div class="talking">
 <!--    <input type="file" onchange="playMusic.call(this)" class="select-file">-->
     <audio class="audio-node" autoplay></audio>
     <button id="start-button" class="btn btn-lg btn-primary" onclick="record()">开始录音</button>
     <button id="end-button" class="btn btn-lg btn-primary" disabled="disabled" onclick="stopRecord()">停止录音</button>
+</div>
 <div id="result-container">
     <div id="word-container"></div>
 </div>

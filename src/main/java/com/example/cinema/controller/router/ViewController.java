@@ -15,10 +15,16 @@ public class ViewController {
         return "index";
     }
 
+    @RequestMapping(value = "/user/selectOcean")
+    public String getSelectOcean() {
+        return "selectOcean";
+    }
+
     @RequestMapping(value = "/user/start")
     public String getSrart() {
         return "start";
     }
+
     @RequestMapping(value = "/user/startSelect")
     public String getSelect() {
         return "startSelect";

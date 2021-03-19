@@ -5,6 +5,7 @@ import com.example.cinema.bl.talking.TalkingService;
 import com.example.cinema.blImpl.user.AccountServiceImpl;
 import com.example.cinema.config.InterceptorConfiguration;
 import com.example.cinema.vo.*;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,7 @@ public class TalkingController {
     @Autowired
     private TalkingService talkingService;
 
-    String base = "d:/upload/";
+    String base = "./video/";
 
     @PostMapping("talking/upload")
     public String uploadFile(@RequestParam(value="multipartFile",required = false) MultipartFile multipartFile, HttpServletRequest request) throws IOException, InterruptedException {
@@ -36,12 +37,12 @@ public class TalkingController {
         System.out.println("获得了文件");
         System.out.println(multipartFile.getOriginalFilename());
         System.out.println(multipartFile.getSize());
-        multipartFile.transferTo(new File(base+"music.wav"));
+//        multipartFile.transferTo(new File(base+"music.wav"));
+        File file=new File(base+"music.wav");
+        FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
 
         String result=talkingService.wavToString();
-        String[] reList=result.split("\"");
-        System.out.println(result);
-        return reList[11];
+        return result;
     }
 
     @PostMapping("talking/uploadURL")

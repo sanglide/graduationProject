@@ -28,7 +28,7 @@ public class TalkingServiceImpl implements TalkingService {
     //3、通过classpath：
 //    private static final String AUDIO_FILE_PATH = TalkingServiceImpl.class.getResource("/").getPath()+"/audio/lfasr.wav";
 //    private static final String AUDIO_FILE_PATH = "d:/upload/music.wav";
-    private static final String AUDIO_FILE_PATH = "d:/upload/music.wav";
+    private static final String AUDIO_FILE_PATH = "./video/music.wav";
 
     /**
      * 注意：同时只能执行一个 示例
@@ -42,9 +42,11 @@ public class TalkingServiceImpl implements TalkingService {
         System.out.println("开始进入调用api的过程");
         // 示例-1：标准用法
         String re=standard();
+        //ToDo:这里已经获得了一个分过句的文字的list，接下来就是调用nlp的方法
+        // 1、生成显示的简略版文字说明；2、生成需要贴到图里的部分的文字
 
         // 示例-2：使用扩展业务参数
-        //businessExtraParams();
+//        String re2=businessExtraParams();
 
         // 示例-3：使用网络代理
         //netProxy();
@@ -92,7 +94,7 @@ public class TalkingServiceImpl implements TalkingService {
      *
      * @throws InterruptedException e
      */
-    private static void businessExtraParams() throws InterruptedException {
+    private static String businessExtraParams() throws InterruptedException {
         //1、创建客户端实例
         LfasrClient lfasrClient = LfasrClient.getInstance(APP_ID, SECRET_KEY);
 
@@ -100,9 +102,9 @@ public class TalkingServiceImpl implements TalkingService {
         //2.1、设置业务参数
         Map<String, String> param = new HashMap<>(16);
         //是否开启分词：默认 false
-        //param.put("has_participle","true");
+        param.put("has_participle","true");
         //转写结果中最大的候选词个数：默认：0，最大不超过5
-        //param.put("max_alternatives","2");
+        param.put("max_alternatives","2");
 
         //是否开启角色分离：默认为false
         //param.put("has_seperate","true");
@@ -133,11 +135,12 @@ public class TalkingServiceImpl implements TalkingService {
         }
         //4、获取结果
         Message result = lfasrClient.getResult(taskId);
-        System.out.println("转写结果: \n" + result.getData());
+        String re=result.getData();
+        System.out.println("转写结果: \n" + re);
 
-
+        return re;
         //退出程序，关闭线程资源，仅在测试main方法时使用。
-        System.exit(0);
+//        System.exit(0);
     }
 
     /**

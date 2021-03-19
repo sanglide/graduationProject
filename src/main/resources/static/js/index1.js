@@ -145,33 +145,15 @@ function playRecord (arrayBuffer) {
 }
 function saveContent (content, fileName) {
     console.log(content.toString())
-    let aTag = document.createElement('a');
-    aTag.setAttribute('download',fileName);
+    // let aTag = document.createElement('a');
+    // aTag.setAttribute('download',fileName);
     let blob = new Blob([content],{type:""});
-    aTag.setAttribute('href',URL.createObjectURL(blob));
-    document.body.appendChild(aTag);
-    aTag.click();
-    document.body.removeChild(aTag);
-    console.log(aTag)
+    // aTag.setAttribute('href',URL.createObjectURL(blob));
+    // document.body.appendChild(aTag);
+    // aTag.click();
+    // document.body.removeChild(aTag);
+    // console.log(aTag)
 
-
-
-    // let formData = new FormData();
-    // formData.append("blobRe", blob);  // 文件名
-    // formData.append("test1","aa")
-    // console.log(formData.get("blobRe"))
-    // console.log(formData.get("test1"))
-    //
-    //
-    // postRequest(
-    //     '/talking/upload',
-    //     formData,
-    //     function (res) {
-    //         console.log("成功调用保存方法")
-    //     },
-    //     function (error) {
-    //         alert(error);
-    //     });
 
     var formData = new FormData();
     formData.append("multipartFile",blob);
