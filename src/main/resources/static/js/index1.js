@@ -167,31 +167,8 @@ function saveContent (content, fileName) {
         contentType: false,
         processData: false,
         cache: false,
-        // dataType:"json",
-        // mimeType:"multipart/form-data",
-        // xhr: function(){
-        //     var myXhr = $.ajaxSettings.xhr();
-        //     //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
-        //     if(myXhr.upload){
-        //         //绑定progress事件的回调函数
-        //         myXhr.upload.addEventListener('progress',handleProgress, false);
-        //     }
-        //     //xhr对象返回给jQuery使用
-        //     return myXhr;
-        // },
-
         success: function (data) {
             viewWord(data)
-            // if(mess==="returnToIndex"){
-            //     window.location.href="/user/oasisindex"
-            // }
-            // if(mess==="returnToError"){
-            //     window.location.href="/user/oasisUploadError"
-            // }
-            //
-            // if(mess==="returnToUpload"){
-            //     window.location.href="/user/oasisUpload"
-            // }
         },
         error: function (error) {
             alert("请刷新一遍重新录制，试一试说短一点~~");
@@ -201,9 +178,27 @@ function saveContent (content, fileName) {
 
 
 }
-
 function viewWord(word){
     console.log(word);
     let str="<p>"+word+"</p>"
     $('#word-container').html(str);
+    viewImage();
+}
+function viewImage(){
+    //todo:顺便将图片库挪到七牛云，实现解耦；将生成好的图片传给前端并正确显示；通过网址id区分背景和目前所处的步骤
+    getRequest(
+        '/talking/uploadImage',
+        // {buyNum:buyNum},
+        function (res) {
+            console.log(res);
+            var list=res.content;
+            console.log(list);
+            let str="<img src='"+list+"'>"
+            $('#image-container').html(str);
+
+        },
+        function (error) {
+            alert(JSON.stringify(error));
+        }
+    );
 }

@@ -1,29 +1,25 @@
 package com.example.cinema.controller.talking;
 
-import com.example.cinema.bl.statistics.StatisticsService;
+import com.example.cinema.bl.talking.GenerateImages;
 import com.example.cinema.bl.talking.TalkingService;
-import com.example.cinema.blImpl.user.AccountServiceImpl;
-import com.example.cinema.config.InterceptorConfiguration;
-import com.example.cinema.vo.*;
+import com.example.cinema.blImpl.talking.GenerateImageImlp;
+import com.example.cinema.po.ImageContent;
+import com.example.cinema.vo.ResponseVO;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.UUID;
 
 @RestController()
 public class TalkingController {
 
     @Autowired
     private TalkingService talkingService;
+    GenerateImages generateImages=new GenerateImageImlp();
 
     String base = "./video/";
 
@@ -41,6 +37,10 @@ public class TalkingController {
         File file=new File(base+"music.wav");
         FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
 
+
+        generateImages.generateImage(new ImageContent());
+        System.out.println("结束生成图片");
+
         String result=talkingService.wavToString();
         return result;
     }
@@ -50,5 +50,13 @@ public class TalkingController {
 
         System.out.println(url);
         return "success";
+    }
+
+    @GetMapping("talking/uploadImage")
+    public ResponseVO getHot(){
+        ResponseVO re=generateImages.getImageRe();
+        File file= (File) re.getContent();
+        System.out.println(file.length());
+        return re;
     }
 }

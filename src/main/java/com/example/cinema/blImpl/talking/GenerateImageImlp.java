@@ -1,15 +1,17 @@
 package com.example.cinema.blImpl.talking;
 
-import org.springframework.util.Assert;
+import com.example.cinema.bl.talking.GenerateImages;
+import com.example.cinema.po.ImageContent;
+import com.example.cinema.vo.ResponseVO;
+
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
 
-public class generateImageImlp{
+public class GenerateImageImlp implements GenerateImages {
     /**
      *
      * @Title: 构造图片
@@ -67,29 +69,44 @@ public class generateImageImlp{
      * @throws IOException
      *             IO异常直接抛出了
      * @author bls
+     * @return
      */
-    public static void main(String[] args) throws IOException {
+//    public static void main(String[] args) throws IOException {
+    public void generateImage(ImageContent args) throws IOException {
         String sourceFilePath = "./image/background-ocean.png";
         String peoplePartner = "./image/people/茉莉公主.png";
         String people="./image/people/白雪公主.png";
         String tool="./image/tool/水晶球.png";
         String saveFilePath = "./image/result.png";
-        generateImageImlp newImageUtils = new generateImageImlp();
+        GenerateImageImlp newImageUtils = new GenerateImageImlp();
         // 构建叠加层
-        BufferedImage buffImg = generateImageImlp.watermark(new File(sourceFilePath),
+        BufferedImage buffImg = GenerateImageImlp.watermark(new File(sourceFilePath),
                 new File(peoplePartner),
                 350, 100, 1.0f);
         // 输出水印图片
         newImageUtils.generateWaterFile(buffImg, saveFilePath);
 
-        buffImg=generateImageImlp.watermark(new File(saveFilePath),
+        buffImg=GenerateImageImlp.watermark(new File(saveFilePath),
                 new File(people),
                 50, 100, 1.0f);
         newImageUtils.generateWaterFile(buffImg, saveFilePath);
 
-        buffImg=generateImageImlp.watermark(new File(saveFilePath),
+        buffImg=GenerateImageImlp.watermark(new File(saveFilePath),
                 new File(tool),
                 250, 100, 1.0f);
         newImageUtils.generateWaterFile(buffImg, saveFilePath);
+
+
+    }
+    public ResponseVO getImageRe(){
+        String saveFilePath = "./image/result.png";
+        try{
+            return ResponseVO.buildSuccess(new File(saveFilePath));
+
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println(e.toString());
+            return ResponseVO.buildFailure("生成图片失败");
+        }
     }
 }
