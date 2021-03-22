@@ -73,28 +73,33 @@ public class GenerateImageImlp implements GenerateImages {
      */
 //    public static void main(String[] args) throws IOException {
     public void generateImage(ImageContent args) throws IOException {
-        String sourceFilePath = "./image/background-ocean.png";
-        String peoplePartner = "./image/people/茉莉公主.png";
-        String people="./image/people/白雪公主.png";
-        String tool="./image/tool/水晶球.png";
-        String saveFilePath = "./image/result.png";
+        String qianzhui="./image/";
+        String sourceFilePath = "background-ocean.png";
+        String peoplePartner = "people/茉莉公主.png";
+        String people="people/白雪公主.png";
+        String tool="tool/水晶球.png";
+        String saveFilePath = "result.png";
         GenerateImageImlp newImageUtils = new GenerateImageImlp();
         // 构建叠加层
-        BufferedImage buffImg = GenerateImageImlp.watermark(new File(sourceFilePath),
-                new File(peoplePartner),
+        BufferedImage buffImg = GenerateImageImlp.watermark(new File(qianzhui+sourceFilePath),
+                new File(qianzhui+peoplePartner),
                 350, 100, 1.0f);
         // 输出水印图片
-        newImageUtils.generateWaterFile(buffImg, saveFilePath);
+        newImageUtils.generateWaterFile(buffImg, qianzhui+saveFilePath);
 
-        buffImg=GenerateImageImlp.watermark(new File(saveFilePath),
-                new File(people),
+        buffImg=GenerateImageImlp.watermark(new File(qianzhui+saveFilePath),
+                new File(qianzhui+people),
                 50, 100, 1.0f);
-        newImageUtils.generateWaterFile(buffImg, saveFilePath);
+        newImageUtils.generateWaterFile(buffImg, qianzhui+saveFilePath);
 
-        buffImg=GenerateImageImlp.watermark(new File(saveFilePath),
-                new File(tool),
+        buffImg=GenerateImageImlp.watermark(new File(qianzhui+saveFilePath),
+                new File(qianzhui+tool),
                 250, 100, 1.0f);
-        newImageUtils.generateWaterFile(buffImg, saveFilePath);
+        newImageUtils.generateWaterFile(buffImg, qianzhui+saveFilePath);
+
+        /**将生成的图片存到七牛云*/
+        UploadImageImlp upload=new UploadImageImlp();
+        upload.uploadFromService(saveFilePath);
 
 
     }

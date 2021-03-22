@@ -182,23 +182,13 @@ function viewWord(word){
     console.log(word);
     let str="<p>"+word+"</p>"
     $('#word-container').html(str);
-    viewImage();
+    viewImage("background-ocean.png");
+    // 到这里已经完成了语音转码以及生成图片，但是此时图片存在七牛云，需要取到前端
 }
-function viewImage(){
-    //todo:顺便将图片库挪到七牛云，实现解耦；将生成好的图片传给前端并正确显示；通过网址id区分背景和目前所处的步骤
-    getRequest(
-        '/talking/uploadImage',
-        // {buyNum:buyNum},
-        function (res) {
-            console.log(res);
-            var list=res.content;
-            console.log(list);
-            let str="<img src='"+list+"'>"
-            $('#image-container').html(str);
-
-        },
-        function (error) {
-            alert(JSON.stringify(error));
-        }
-    );
+function viewImage(fileName){
+    //todo:顺便将图片库挪到七牛云，实现解耦；将生成好的图片传给前端并正确显示；
+    // todo:通过网址id区分背景和目前所处的步骤
+    let url="http://qqd3in7iz.hn-bkt.clouddn.com/"
+    let str="<img src='"+url+fileName+"'>"
+    $('#image-container').html(str);
 }
