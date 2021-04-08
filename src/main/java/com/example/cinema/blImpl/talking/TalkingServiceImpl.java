@@ -2,16 +2,11 @@ package com.example.cinema.blImpl.talking;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.cinema.bl.talking.TalkingService;
-import com.example.cinema.po.PopularMovies;
-import com.example.cinema.vo.PopularMoviesVO;
-import com.example.cinema.vo.ResponseVO;
-import com.example.cinema.vo.talkingWordVO;
 import com.iflytek.msp.lfasr.LfasrClient;
 import com.iflytek.msp.lfasr.model.Message;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +30,11 @@ public class TalkingServiceImpl implements TalkingService {
      *
      * @throws InterruptedException e
      */
+
+    public static void main(String[] args) throws InterruptedException {
+        TalkingService talkingService=new TalkingServiceImpl();
+        System.out.println(talkingService.wavToString());
+    }
 
     @Override
     public String wavToString() throws InterruptedException {

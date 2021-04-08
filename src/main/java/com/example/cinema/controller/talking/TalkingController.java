@@ -46,7 +46,8 @@ public class TalkingController {
         FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
 
         /**将音频文件转码成文字*/
-        String result=talkingService.wavToString();
+//        String result=talkingService.wavToString();
+        String result="暂时服务不可用";
 
         /**将文字转成图像*/
         /**todo：根据文字内容构建一个imageContent对象，这个应该是zyc做的
