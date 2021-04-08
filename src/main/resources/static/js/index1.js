@@ -1,5 +1,14 @@
 let leftDataList=[];
 let rightDataList=[];
+let backgroundName;
+let page;
+$(document).ready(function () {
+    backgroundName = (window.location.href.split('?')[1].split('&')[0].split('=')[1]);
+    page=(window.location.href.split('?')[1].split('&')[1].split('=')[1]);
+    console.log(backgroundName);
+    console.log(page);
+
+})
 
 function playMusic(){
     if(!this.value){
@@ -143,6 +152,8 @@ function playRecord (arrayBuffer) {
     let blobUrl = URL.createObjectURL(blob);//就是这里的错
     document.querySelector('.audio-node').src = blobUrl;
 }
+
+//像后端传递音频文件并返回生成的哈希值文件名和简要说明，自此以上都是录音的方法
 function saveContent (content, fileName) {
     console.log(content.toString())
     // let aTag = document.createElement('a');
@@ -154,11 +165,15 @@ function saveContent (content, fileName) {
     // document.body.removeChild(aTag);
     // console.log(aTag)
 
-
     var formData = new FormData();
     formData.append("multipartFile",blob);
+    formData.append("background",backgroundName)
+    formData.append("pageName",page)
+
     console.log(formData);
     console.log(formData.get("multipartFile"));
+    console.log(formData.get("background"));
+    console.log(formData.get("pageName"));
 
     $.ajax({
         type: 'POST',
@@ -168,7 +183,14 @@ function saveContent (content, fileName) {
         processData: false,
         cache: false,
         success: function (data) {
-            viewWord(data)
+            let text=data.split('&')[0]
+            let url=data.split('&')[1]
+            console.log(text)
+            console.log(url)
+            storageName(url)
+            viewWord(text)
+            viewImage(url)
+
         },
         error: function (error) {
             alert("请刷新一遍重新录制，试一试说短一点~~");
@@ -178,17 +200,32 @@ function saveContent (content, fileName) {
 
 
 }
+//是将文件和说明显示在网页中的方法
 function viewWord(word){
     console.log(word);
     let str="<p>"+word+"</p>"
     $('#word-container').html(str);
-    viewImage("background-ocean.png");
+    viewImage();
     // 到这里已经完成了语音转码以及生成图片，但是此时图片存在七牛云，需要取到前端
 }
 function viewImage(fileName){
     //todo:顺便将图片库挪到七牛云，实现解耦；将生成好的图片传给前端并正确显示；
-    // todo:通过网址id区分背景和目前所处的步骤
     let url="http://qqd3in7iz.hn-bkt.clouddn.com/"
     let str="<img src='"+url+fileName+"'>"
     $('#image-container').html(str);
+}
+
+// 将文件名的哈希值存储到本地数据库中
+function storageName(fileName){
+    console.log("进入存储文件到数据库中的方法")
+    getRequest(
+        '/test/storageImage?page_name="'+page+'"&hash_name="'+fileName+'"',
+        function (res) {
+            var data = res.content||[];
+
+        },
+        function (error) {
+            alert(JSON.stringify(error));
+        }
+    );
 }

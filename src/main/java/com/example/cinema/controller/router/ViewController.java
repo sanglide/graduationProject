@@ -20,6 +20,16 @@ public class ViewController {
         return "selectOcean";
     }
 
+    @RequestMapping(value = "/user/selectHouse")
+    public String getSelectHouse() {
+        return "selectHouse";
+    }
+
+    @RequestMapping(value = "/user/selectTree")
+    public String getSelectTree() {
+        return "selectTree";
+    }
+
     @RequestMapping(value = "/user/start")
     public String getSrart() {
         return "start";

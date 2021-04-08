@@ -6,6 +6,6 @@ import com.example.cinema.vo.ResponseVO;
 import java.io.IOException;
 
 public interface GenerateImages {
-    public void generateImage(ImageContent args) throws IOException;
+    public String generateImage(ImageContent args) throws IOException;
     public ResponseVO getImageRe();
 }

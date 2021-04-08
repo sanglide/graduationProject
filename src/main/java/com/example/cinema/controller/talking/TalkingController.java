@@ -3,6 +3,7 @@ package com.example.cinema.controller.talking;
 import com.example.cinema.bl.talking.GenerateImages;
 import com.example.cinema.bl.talking.TalkingService;
 import com.example.cinema.blImpl.talking.GenerateImageImlp;
+import com.example.cinema.blImpl.talking.UploadImageImlp;
 import com.example.cinema.po.ImageContent;
 import com.example.cinema.vo.ResponseVO;
 import org.apache.commons.io.FileUtils;
@@ -24,25 +25,45 @@ public class TalkingController {
     String base = "./video/";
 
     @PostMapping("talking/upload")
-    public String uploadFile(@RequestParam(value="multipartFile",required = false) MultipartFile multipartFile, HttpServletRequest request) throws IOException, InterruptedException {
+    public String uploadFile(@RequestParam(value="multipartFile",required = false) MultipartFile multipartFile,
+                             @RequestParam(value="background",required = false) String background,
+                             @RequestParam(value="pageName",required = false) String pageName,
+                                     HttpServletRequest request) throws IOException, InterruptedException {
         if (multipartFile==null) {
             System.out.println("multipartFile是null");
 
         }
         System.out.println(multipartFile.getContentType());
+        System.out.println(pageName);
+        System.out.println(background);
         System.out.println("获得了文件");
         System.out.println(multipartFile.getOriginalFilename());
         System.out.println(multipartFile.getSize());
 //        multipartFile.transferTo(new File(base+"music.wav"));
+
+        /**生成音频文件并存储在本地*/
         File file=new File(base+"music.wav");
         FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
 
+        /**将音频文件转码成文字*/
+        String result=talkingService.wavToString();
 
-        generateImages.generateImage(new ImageContent());
+        /**将文字转成图像*/
+        /**todo：根据文字内容构建一个imageContent对象，这个应该是zyc做的
+         * todo：根据生成的文字result提取简要的说明字符串*/
+        ImageContent imageContent=new ImageContent();
+        imageContent.setBackground(background);
+        imageContent.setFileName(pageName);
+
+        String savefileName=generateImages.generateImage(imageContent);
+        System.out.println("生成的图片名本地路径:"+savefileName);
         System.out.println("结束生成图片");
 
-        String result=talkingService.wavToString();
-        return result;
+        /**将图像上传七牛云并返回哈希值（文件名）*/
+        UploadImageImlp upload=new UploadImageImlp();
+        String HashfileName=upload.uploadFromService(savefileName);
+
+        return result+"&"+HashfileName;
     }
 
     @PostMapping("talking/uploadURL")

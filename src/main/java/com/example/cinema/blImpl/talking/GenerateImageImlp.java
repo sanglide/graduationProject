@@ -71,14 +71,16 @@ public class GenerateImageImlp implements GenerateImages {
      * @author bls
      * @return
      */
-//    public static void main(String[] args) throws IOException {
-    public void generateImage(ImageContent args) throws IOException {
+    /**参数是一个imagecontent的对象，返回保存在本地的图片名*/
+
+    public String generateImage(ImageContent args) throws IOException {
         String qianzhui="./image/";
-        String sourceFilePath = "background-ocean.png";
-        String peoplePartner = "people/茉莉公主.png";
+        String sourceFilePath = "background-"+args.getBackground()+".png";
+        System.out.println(sourceFilePath);
+        String peoplePartner = "people/花木兰公主.png";
         String people="people/白雪公主.png";
         String tool="tool/水晶球.png";
-        String saveFilePath = "result.png";
+        String saveFilePath = args.getFileName()+".png";
         GenerateImageImlp newImageUtils = new GenerateImageImlp();
         // 构建叠加层
         BufferedImage buffImg = GenerateImageImlp.watermark(new File(qianzhui+sourceFilePath),
@@ -97,11 +99,7 @@ public class GenerateImageImlp implements GenerateImages {
                 250, 100, 1.0f);
         newImageUtils.generateWaterFile(buffImg, qianzhui+saveFilePath);
 
-        /**将生成的图片存到七牛云*/
-        UploadImageImlp upload=new UploadImageImlp();
-        upload.uploadFromService(saveFilePath);
-
-
+        return saveFilePath;
     }
     public ResponseVO getImageRe(){
         String saveFilePath = "./image/result.png";
@@ -113,5 +111,12 @@ public class GenerateImageImlp implements GenerateImages {
             System.out.println(e.toString());
             return ResponseVO.buildFailure("生成图片失败");
         }
+    }
+    public static void main(String[] args) throws IOException {
+        GenerateImages generateImages=new GenerateImageImlp();
+        ImageContent imageContent=new ImageContent();
+        imageContent.setBackground("ocean");
+        imageContent.setFileName("page1");
+        generateImages.generateImage(imageContent);
     }
 }
