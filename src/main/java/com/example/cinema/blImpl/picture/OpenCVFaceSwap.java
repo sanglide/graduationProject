@@ -15,7 +15,11 @@ import org.bytedeco.opencv.opencv_imgproc.Subdiv2D;
 import org.bytedeco.opencv.opencv_imgproc.Vec6fVector;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -585,4 +589,47 @@ public class OpenCVFaceSwap {
         //返回的就是两个图像的凸包的位置序列
         return  Pair.of(hull1, hull2);
     }
+
+
+
+    /**
+     * 将后端生成的图片直接传到前端
+     * @param path
+     * @param rp
+     */
+    public  void uploadPictureToAdvice(String path, HttpServletResponse rp){
+
+//        String property = System.getProperty("user.dir");
+//        String path = property + "\\src\\main\\resources\\static\\photos\\photo.jpg";
+        File imageFile = new File(path);
+        if (imageFile.exists()) {
+            FileInputStream fis = null;
+            OutputStream os = null;
+            try {
+                fis = new FileInputStream(imageFile);
+                os = rp.getOutputStream();
+                int count = 0;
+                byte[] buffer = new byte[1024 * 8];
+                while ((count = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, count);
+                    // os.flush();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    fis.close();
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        System.out.println(rp);
+    }
+
+
 }

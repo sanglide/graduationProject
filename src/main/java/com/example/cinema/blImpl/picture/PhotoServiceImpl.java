@@ -49,37 +49,6 @@ public class PhotoServiceImpl implements PhotoService {
             faceCascade.load("D:\\openCV\\opencv341\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml");
             // 调用摄像头
             VideoCapture capture = new VideoCapture();
-//            try {
-//                capture.open(0);
-//                if (capture.isOpened()) {
-//                    Mat image = new Mat();
-//                    int i=0;
-//                    while(i<100) {
-//                        capture.read(image);
-//                        if (!image.empty()) {
-//                            //detectAndDisplay(image, faceCascade);
-//                            videoPanel.setImageWithMat(image);
-//                            cameraFrame.repaint();
-//                            i++;
-////                        Thread.sleep(1000);
-//                        } else {
-//                            System.exit(0);//退出
-//                            break;
-//                        }
-//                    }
-//
-//                    capture.read(image);
-//                    videoPanel.saveImageWithMat(image);
-//                    cameraFrame.repaint();
-//                    //System.exit(2);//退出
-//                }
-//                Thread.sleep(200);//2000毫秒刷新一次图像
-//                System.exit(0);//退出
-//            }
-//            catch (Exception e){}
-//            finally {
-//                capture.release();
-//            }
             try {
                 capture.open(0);
                 if (capture.isOpened()) {
@@ -98,13 +67,10 @@ public class PhotoServiceImpl implements PhotoService {
                             break;
                         }
                     }
-                    System.out.println("wq");
                     capture.read(image);
                     videoPanel.saveImageWithMat(image);
                     capture.release();
                     cameraFrame.dispose();
-                    System.out.println("wq1");
-                    //System.exit(0);
 
                 }
             } catch (InterruptedException e) {
@@ -112,38 +78,12 @@ public class PhotoServiceImpl implements PhotoService {
             } finally {
                 capture.release();
             }
-            System.out.println("12");
 
             String property = System.getProperty("user.dir");
             String path = property + "\\src\\main\\resources\\static\\photos\\photo.jpg";
-            File imageFile = new File(path);
-            if (imageFile.exists()) {
-                FileInputStream fis = null;
-                OutputStream os = null;
-                try {
-                    fis = new FileInputStream(imageFile);
-                    os = rp.getOutputStream();
-                    int count = 0;
-                    byte[] buffer = new byte[1024 * 8];
-                    while ((count = fis.read(buffer)) != -1) {
-                        os.write(buffer, 0, count);
-                       // os.flush();
-                    }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        fis.close();
-                        os.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            uploadPictureToAdvice(path,rp);
 
-            }
-
-            System.out.println(rp);
 
 
             return ResponseVO.buildSuccess();
@@ -156,90 +96,44 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
 
+    /**
+     * 将后端生成的图片直接传到前端
+     * @param path
+     * @param rp
+     */
+    public static void uploadPictureToAdvice(String path,HttpServletResponse rp){
 
-//    @Override
-//    public ResponseVO takePictures() {
-//        Webcam webcam = Webcam.getDefault();
-//        webcam.setViewSize(WebcamResolution.VGA.getSize());
-//        WebcamPanel panel = new WebcamPanel(webcam);
-//        panel.setFPSDisplayed(true);
-//        panel.setDisplayDebugInfo(true);
-//        panel.setImageSizeDisplayed(true);
-//        panel.setMirrored(true);
-//
-//        JFrame window = new JFrame("Test webcam panel");
-//        window.add(panel);
-//        window.setResizable(true);
-//        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        window.pack();
-//        window.setVisible(true);
-//
-//        final JButton button = new JButton("拍照");
-//        window.add(panel, BorderLayout.CENTER);
-//        window.add(button, BorderLayout.SOUTH);
-//        window.setResizable(true);
-//        window.pack();
-//        window.setVisible(true);
-//        try {
-//            String fileName = "D://" + System.currentTimeMillis(); // 保存路径即图片名称（不用加后缀）
-//            WebcamUtils.capture(webcam, fileName, ImageUtils.FORMAT_PNG);
-//            capture.open(0);
-//            if (capture.isOpened()) {
-//                Mat image = new Mat();
-//                int i=0;
-//                while(i<100) {
-//                    capture.read(image);
-//                    if (!image.empty()) {
-//                        //detectAndDisplay(image, faceCascade);
-//                        videoPanel.setImageWithMat(image);
-//                        cameraFrame.repaint();
-//                        i++;
-////                        Thread.sleep(1000);
-//                    } else {
-//                        System.exit(0);//退出
-//                        break;
-//                    }
-//                }
-//
-//                capture.read(image);
-//                videoPanel.saveImageWithMat(image);
-//                cameraFrame.repaint();
-//                //System.exit(2);//退出
-//            }
-//            Thread.sleep(200);//2000毫秒刷新一次图像
-//            System.exit(0);//退出
-//        }
-//        catch (Exception e){}
-//        finally {
-//            capture.release();
-//        }
-//        System.out.println("12");
-//        button.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//
-//                button.setEnabled(false); // 设置按钮不可点击
-//
-//                // 实现拍照保存-------start
-//                String fileName = "D://" + System.currentTimeMillis(); // 保存路径即图片名称（不用加后缀）
-//                WebcamUtils.capture(webcam, fileName, ImageUtils.FORMAT_PNG);
-//                SwingUtilities.invokeLater(new Runnable() {
-//
-//                    @Override
-//                    public void run() {
-//                        JOptionPane.showMessageDialog(null, "拍照成功");
-//                        button.setEnabled(true); // 设置按钮可点击
-//
-//                        return;
-//                    }
-//                });
-//                // 实现拍照保存-------end
-//
-//            }
-//        });
-//
-//        return ResponseVO.buildSuccess();
-//    }
+//        String property = System.getProperty("user.dir");
+//        String path = property + "\\src\\main\\resources\\static\\photos\\photo.jpg";
+        File imageFile = new File(path);
+        if (imageFile.exists()) {
+            FileInputStream fis = null;
+            OutputStream os = null;
+            try {
+                fis = new FileInputStream(imageFile);
+                os = rp.getOutputStream();
+                int count = 0;
+                byte[] buffer = new byte[1024 * 8];
+                while ((count = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, count);
+                    // os.flush();
+                }
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    fis.close();
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        System.out.println(rp);
+    }
 
 
     /**
