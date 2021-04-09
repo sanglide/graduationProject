@@ -127,7 +127,7 @@ public class PhotoServiceImpl implements PhotoService {
                     byte[] buffer = new byte[1024 * 8];
                     while ((count = fis.read(buffer)) != -1) {
                         os.write(buffer, 0, count);
-                        os.flush();
+                       // os.flush();
                     }
 
                 } catch (Exception e) {
