@@ -46,7 +46,7 @@ public class PhotoServiceImpl implements PhotoService {
 //            String path_1 = property_1 + "\\src\\main\\resources\\lib\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml";
 
             // 获取模型文件
-            faceCascade.load("D:\\openCV\\opencv341\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml");
+            faceCascade.load("D:\\app\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml");
             // 调用摄像头
             VideoCapture capture = new VideoCapture();
             try {
