@@ -5,6 +5,9 @@ public class ImageContent {
     String background;
     String fileName;
 
+    public void printContent(){
+//        todo
+    }
     /**判断这个Image Content的内容是否完成*/
     public boolean isValid(){
         if(background==null){
