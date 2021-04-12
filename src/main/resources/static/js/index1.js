@@ -209,7 +209,6 @@ function viewWord(word){
     // 到这里已经完成了语音转码以及生成图片，但是此时图片存在七牛云，需要取到前端
 }
 function viewImage(fileName){
-    //todo:顺便将图片库挪到七牛云，实现解耦；将生成好的图片传给前端并正确显示；
     let url="http://qqd3in7iz.hn-bkt.clouddn.com/"
     let str="<img src='"+url+fileName+"'>"
     $('#image-container').html(str);

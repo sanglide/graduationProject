@@ -47,7 +47,8 @@ public class TalkingController {
 
         /**将音频文件转码成文字*/
 //        String result=talkingService.wavToString();
-        String result="暂时服务不可用";
+        String result="为了节省免费服务器，就暂时关掉了，\n" +
+                "如需要使用语音转文字就将TalkingController的49行注释去掉";
 
         /**将文字转成图像*/
         /**todo：根据文字内容构建一个imageContent对象，这个应该是zyc做的
