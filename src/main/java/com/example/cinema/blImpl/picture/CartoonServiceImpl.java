@@ -5,8 +5,6 @@ import com.example.cinema.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-
 
 @Service
 public class CartoonServiceImpl implements CartoonService {
@@ -18,31 +16,46 @@ public class CartoonServiceImpl implements CartoonService {
     public static String savePath ;
 
     @Override
-    public ResponseVO ps(String path_real, String path_cartoon, HttpServletResponse rp){
-        String property_1 = System.getProperty("user.dir");
-        String savePath = property_1 + "\\src\\main\\resources\\static\\photos\\";
+    public ResponseVO ps(String path_real, String path_cartoon){
+        try{
+            String property_1 = System.getProperty("user.dir");
+            String savePath = property_1 + "\\src\\main\\resources\\static\\photos\\";
 
-        openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",false);
+            System.out.println(path_cartoon);
+            openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",false);
 
-        String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result.jpg";
-        openCVFaceSwap.uploadPictureToAdvice(result_path,rp);
+            String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result_ps.jpg";
+            System.out.println(result_path);
 
-        return ResponseVO.buildSuccess();
+            return ResponseVO.buildSuccess("result_ps.jpg");
+
+        }catch (Exception e){
+            System.out.println(e.toString());
+            return ResponseVO.buildFailure("直接ps卡通脸失败");
+        }
     }
 
 
     @Override
-    public ResponseVO fix(String path_real,String path_cartoon,HttpServletResponse rp){
-        String property_1 = System.getProperty("user.dir");
-        String savePath = property_1 + "\\src\\main\\resources\\static\\photos\\";
+    public ResponseVO fix(String path_real, String path_cartoon){
+        try{
 
-        openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",true);
+            String property_1 = System.getProperty("user.dir");
+            String savePath = property_1 + "\\src\\main\\resources\\static\\photos\\";
 
-        String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result.jpg";
-        openCVFaceSwap.uploadPictureToAdvice(result_path,rp);
+            System.out.println(path_cartoon);
+            openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",true);
+
+            String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result_fix.jpg";
+            System.out.println(result_path);
 
 
-        return ResponseVO.buildSuccess();
+            return ResponseVO.buildSuccess("result_fix.jpg");
+
+        }catch(Exception e){
+            System.out.println(e.toString());
+            return ResponseVO.buildFailure("人脸和卡通人脸融合失败");
+        }
     }
 
 
