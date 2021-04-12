@@ -3,10 +3,10 @@ function startCamera(){
     getRequest(
         '/photo',
         function (res) {
-            // var data = res.content||[];
+            var data = res.content||[];
             console.log("后端返回的东西在这里："+res)
-            // console.log("后端返回的数据在这里"+data)
-            getImage(res);
+            console.log("后端返回的数据在这里"+data)
+            getImage(data);
         },
         function (error) {
             alert(JSON.stringify(error));
@@ -15,6 +15,18 @@ function startCamera(){
 }
 function getImage(data){
     console.log("进入插字符串的方法："+data)
-    let str="<img src='"+"/photos/photo.jpg"+"'>"
+    let url="http://qqd3in7iz.hn-bkt.clouddn.com/"
+    let str="<div class=\"border\" ><div class='frame' ><div class='image' style='background-image: url("+url+data+")'></div></div></div>"
     $('#image-container').html(str);
+    document.getElementById('camera-button1').style.display = "none";
+    document.getElementById('camera-button2').style.display = "none";
+}
+function startImage(){
+    let data="background-ocean.png"
+    console.log("替换成一个啥子图片进行卡通拟合")
+    let url="http://qqd3in7iz.hn-bkt.clouddn.com/"
+    let str="<div class=\"border\" ><div class='frame' ><div class='image' style='background-image: url("+url+data+")'></div></div></div>"
+    $('#image-container').html(str);
+    document.getElementById('camera-button1').style.display = "none";
+    document.getElementById('camera-button2').style.display = "none";
 }
