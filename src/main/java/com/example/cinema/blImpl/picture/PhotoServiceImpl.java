@@ -10,6 +10,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.videoio.VideoCapture;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -23,6 +24,11 @@ import java.io.OutputStream;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {
+
+   UploadPhotoImpl uploadPhoto=new UploadPhotoImpl();
+
+//    @Autowired
+//    UploadPhotoImpl uploadPhoto;
 
     @Override
     public ResponseVO takePicture(){
@@ -84,9 +90,10 @@ public class PhotoServiceImpl implements PhotoService {
 
             System.out.println(path);
            // uploadPictureToAdvice(path,rp);
-            String name="photo.jpg";
+            //String name="photo.jpg";
+            String result=uploadPhoto.uploadFromService("photo.jpg");
 
-            return ResponseVO.buildSuccess(name);
+            return ResponseVO.buildSuccess(result);
 
 
         }catch (Exception e){

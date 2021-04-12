@@ -13,19 +13,21 @@ public class AdjustServiceImpl implements AdjustService {
     @Autowired
     OpenCVFaceSwap openCVFaceSwap;
 
+    UploadPhotoImpl uploadPhoto=new UploadPhotoImpl();
+
     @Override
     public ResponseVO adjustEye(String path, String savePath, String type){
         eyeAndMouthAdjust.findPoints(path, savePath, type);
-        //String result_path=savePath+"result_adjust.jpg";
-        //openCVFaceSwap.uploadPictureToAdvice(result_path,rp);
-        return ResponseVO.buildSuccess("eye_adjust.jpg");
+
+        String result=uploadPhoto.uploadFromService("eye_adjust.jpg");
+        return ResponseVO.buildSuccess(result);
     }
 
     @Override
     public ResponseVO adjustMouth(String path, String savePath, String type){
         eyeAndMouthAdjust.findPoints(path,savePath,type);
-        //String result_path=savePath+"result_adjust.jpg";
-        //openCVFaceSwap.uploadPictureToAdvice(result_path,rp);
-        return ResponseVO.buildSuccess("mouth_adjust.jpg");
+
+        String result=uploadPhoto.uploadFromService("mouth_adjust.jpg");
+        return ResponseVO.buildSuccess(result);
     }
 }
