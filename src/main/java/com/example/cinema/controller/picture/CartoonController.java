@@ -18,6 +18,7 @@ public class CartoonController {
     @RequestMapping(value = "/cartoon/ps/{id}",method= RequestMethod.GET)
     public ResponseVO ps(@PathVariable int id){
         //String id=request.getParameter("id");
+        System.out.println("前端传过来的id："+id);
         String property_1 = System.getProperty("user.dir");
         String path_real = property_1 + "\\src\\main\\resources\\static\\photos\\ertong1.jpg";
         String path_cartoon=property_1 + "\\src\\main\\resources\\static\\photos\\gongzhu_"+id+".jpg";
@@ -27,6 +28,7 @@ public class CartoonController {
 
     @RequestMapping(value = "/cartoon/fix/{id}",method = RequestMethod.GET)
     public ResponseVO fix(@PathVariable int id){
+
         //String id=request.getParameter("id");
         String property_1 = System.getProperty("user.dir");
         String path_real = property_1 + "\\src\\main\\resources\\static\\photos\\ertong1.jpg";

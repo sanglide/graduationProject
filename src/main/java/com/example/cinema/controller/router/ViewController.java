@@ -15,6 +15,26 @@ public class ViewController {
         return "index";
     }
 
+    @RequestMapping(value = "/user/selectPs")
+    public String getSelectFace() {
+        return "selectPs";
+    }
+
+    @RequestMapping(value = "/user/selectWhichPs")
+    public String getSelectPs() {
+        return "selectWhichPs";
+    }
+
+    @RequestMapping(value = "/user/selectFix")
+    public String getSelectFix() {
+        return "selectFix";
+    }
+
+    @RequestMapping(value = "/user/selectWhichFix")
+    public String getSelectWhichFix() {
+        return "selectWhichFix";
+    }
+
     @RequestMapping(value = "/user/selectOcean")
     public String getSelectOcean() {
         return "selectOcean";

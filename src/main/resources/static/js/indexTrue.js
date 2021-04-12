@@ -16,17 +16,18 @@ function startCamera(){
 function getImage(data){
     console.log("进入插字符串的方法："+data)
     let url="http://qqd3in7iz.hn-bkt.clouddn.com/"
-    let str="<div class=\"border\" ><div class='frame' ><div class='image' style='background-image: url("+url+data+")'></div></div></div>"
+    let str="<div class=\"border\" >" +
+        "<div class='frame' >" +
+        "<div class='image' style='background-image: url("+url+data+")'></div></div></div>"
     $('#image-container').html(str);
     document.getElementById('camera-button1').style.display = "none";
-    document.getElementById('camera-button2').style.display = "none";
+    // document.getElementById('camera-button2').style.display = "none";
+    document.getElementById('camera-button3').style.display = "block";
+    document.getElementById('camera-button4').style.display = "block";
 }
-function startImage(){
-    let data="background-ocean.png"
-    console.log("替换成一个啥子图片进行卡通拟合")
-    let url="http://qqd3in7iz.hn-bkt.clouddn.com/"
-    let str="<div class=\"border\" ><div class='frame' ><div class='image' style='background-image: url("+url+data+")'></div></div></div>"
-    $('#image-container').html(str);
-    document.getElementById('camera-button1').style.display = "none";
-    document.getElementById('camera-button2').style.display = "none";
+function picturePs(){
+    window.location.replace("/user/selectWhichPs");
+}
+function pictureFix(){
+    window.location.replace("/user/selectWhichFix");
 }

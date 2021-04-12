@@ -23,10 +23,14 @@
 <body>
 <!--<div><h1>请选择自己想要的拟合方式~</h1></div>-->
 <button onclick="startCamera()" type="button" class="btn btn-success" id="camera-button1">使用人脸拟合</button>
-<button onclick="startImage()" type="button" class="btn btn-success" id="camera-button2">使用卡通拟合</button>
+<!--<button onclick="startImage()" type="button" class="btn btn-success" id="camera-button2">使用卡通拟合</button>-->
 <!--<a class="zanshi" href="/user/startSelect">开始故事讲述</a>-->
 <!--<div id="image-container"></div>-->
 <div id="image-container"></div>
+<button style="display: none" onclick="picturePs()" type="button" class="btn btn-success" id="camera-button3">抠图拼接</button>
+<button style="display: none" onclick="pictureFix()" type="button" class="btn btn-success" id="camera-button4">人脸拟合</button>
+
+
 <audio src="/video/camera.wav" autoplay="autoplay"></audio>
 </body>
 
