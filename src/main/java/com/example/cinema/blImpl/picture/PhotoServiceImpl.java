@@ -1,7 +1,7 @@
 package com.example.cinema.blImpl.picture;
 
 import com.example.cinema.bl.picture.PhotoService;
-import com.example.cinema.util.*;
+import com.example.cinema.util.VideoPanel;
 import com.example.cinema.vo.ResponseVO;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
@@ -25,7 +25,7 @@ import java.io.OutputStream;
 public class PhotoServiceImpl implements PhotoService {
 
     @Override
-    public ResponseVO takePicture(HttpServletResponse rp){
+    public ResponseVO takePicture(){
         try{
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
             System.out.println("Welcome to OpenCV " + Core.VERSION);
@@ -46,7 +46,7 @@ public class PhotoServiceImpl implements PhotoService {
 //            String path_1 = property_1 + "\\src\\main\\resources\\lib\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml";
 
             // 获取模型文件
-            faceCascade.load("D:\\app\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml");
+            faceCascade.load("D:\\openCV\\opencv341\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml");
             // 调用摄像头
             VideoCapture capture = new VideoCapture();
             try {
@@ -82,11 +82,11 @@ public class PhotoServiceImpl implements PhotoService {
             String property = System.getProperty("user.dir");
             String path = property + "\\src\\main\\resources\\static\\photos\\photo.jpg";
 
-            uploadPictureToAdvice(path,rp);
+            System.out.println(path);
+           // uploadPictureToAdvice(path,rp);
+            String name="photo.jpg";
 
-
-
-            return ResponseVO.buildSuccess();
+            return ResponseVO.buildSuccess(name);
 
 
         }catch (Exception e){

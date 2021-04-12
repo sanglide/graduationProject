@@ -1,6 +1,5 @@
 package com.example.cinema.blImpl.picture;
 
-
 import com.example.cinema.util.Correspondens;
 import com.example.cinema.util.FaceDetect;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,11 +14,7 @@ import org.bytedeco.opencv.opencv_imgproc.Subdiv2D;
 import org.bytedeco.opencv.opencv_imgproc.Vec6fVector;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,36 +23,27 @@ import static org.bytedeco.opencv.global.opencv_core.*;
 import static org.bytedeco.opencv.global.opencv_imgproc.CV_AA;
 import static org.bytedeco.opencv.global.opencv_imgproc.INTER_LINEAR;
 
-
 /**
- * @ClassName: OpenCVFaceSwap
- * @description: 人脸融合方法
- * @author: ShiQiang
- * @create: 2020年5月29日14:03:10
- **/
-
+ * @description 这里使通过对融合之后的人脸进行关键点识别
+ *修改关键点的坐标来达到大眼、小嘴的目的
+ * @author wq
+ */
 
 @Service
-public class OpenCVFaceSwap {
-
+public class EyeAndMouthAdjust {
     public  String savePath ;
-
     /**
      * @param imgPath1
-     * @param imgPath2
      * @param path
      * @param type
-     * @param jingxi
      */
-    public  void faceMerge(String imgPath1,String imgPath2,String path,String type,boolean jingxi){
+    public  void findPoints(String imgPath1,String path,String type){
         savePath = path;
         // 两张图片地址
         String path1 = imgPath1;
-        String path2 = imgPath2;
         // load the two images.
         Mat imgCV1 = opencv_imgcodecs.imread(path1);
-        Mat imgCV2 = opencv_imgcodecs.imread(path2);
-
+        Mat imgCV2 = opencv_imgcodecs.imread(path1);
         if (null == imgCV1 || imgCV1.cols() <= 0 || null == imgCV2 || imgCV2.cols() <= 0) {
             System.out.println("There is wrong with images");
             return;
@@ -67,46 +53,25 @@ public class OpenCVFaceSwap {
         //cv::Point2f pt(10, 20);Point2f表示对应的图里面的特征点：有行和列
         List<Point2f> points12f = new ArrayList<>();
         List<Point2f> points22f = new ArrayList<>();
-        // 人脸识别出的关键点
-//        if ("baidu".equals(type)) {
-//            points12f = FaceDetect.detect(path1);
-//            points22f = FaceDetect.detect(path2);
-//        }
-        if ("opencv".equals(type)) {
-            points12f = FaceDetect.detect(imgCV1.clone());
-            points22f = FaceDetect.detect(imgCV2.clone());
-            //根据效果决定是否留存
-            //---去掉多余的点位
-            for(int i=0;i<68;i++){
-                System.out.println(i+"   "+points22f.get(i).x()+" "+points22f.get(i).y());
-            }
-
-            double temp=(points22f.get(19).y()-points22f.get(37).y());
-            for(int i=17;i<46;i++){
-                if((i>=17&&i<=26)){
-                    points22f.set(i,new Point2f((float)(points22f.get(i).x()),(float)(points22f.get(i).y()+temp)));
-                }
-//
-            }
-            points12f.remove(64);
-            points12f.remove(63);
-            points12f.remove(62);
-            points12f.remove(61);
-            points12f.remove(60);
-            points22f.remove(64);
-            points22f.remove(63);
-            points22f.remove(62);
-            points22f.remove(61);
-            points22f.remove(60);
+        points12f = FaceDetect.detect(imgCV1.clone());
+        points22f = FaceDetect.detect(imgCV2.clone());
+        //根据效果决定是否留存
+        //---去掉多余的点位
+        for(int i=0;i<68;i++){
+            System.out.println(i+"   "+points22f.get(i).x()+" "+points22f.get(i).y());
         }
-        if (!jingxi) {
-            //通过凸包进行融合，这里是将所有的特征点里面的凸包的特性点找到
-            Pair<List<Point2f>,List<Point2f>> pair = getConvexHull(imgCV1.clone(),imgCV2.clone(),points12f,points22f);
-
-
-            //找到的图片的凸包的特征点
-            points12f = pair.getLeft();
-            points22f = pair.getRight();
+        // 人脸识别出的关键点
+        if ("eye".equals(type)) {
+            List<Point2f> temp1=eyeAdjust(points12f,points22f).getLeft();
+            List<Point2f> temp2=eyeAdjust(points12f,points22f).getRight();
+            points12f=temp1;
+            points22f=temp2;
+        }
+        if ("mouth".equals(type)) {
+            List<Point2f> temp1=mouthAdjust(points12f,points22f).getLeft();
+            List<Point2f> temp2=mouthAdjust(points12f,points22f).getRight();
+            points12f=temp1;
+            points22f=temp2;
         }
 
         drawPoints(imgCV1.clone(),points12f,"1");
@@ -164,42 +129,289 @@ public class OpenCVFaceSwap {
 
         drawTriangles("3",triangleImg[1], triangles2, new Scalar(255, 255));
         drawTriangles("4",triangleImg[0], triangles1, new Scalar(255, 255));
-        if(jingxi==false){
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg1_ps.jpg", srcImg1);
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg2_ps.jpg", imgCV2);
 
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "temp_ps.jpg", _srcImg2);
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "result_ps.jpg", resultImg);
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "result.jpg", resultImg);
+        if(type=="eye"){
+            opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg1.jpg", srcImg1);
+            opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg2.jpg", imgCV2);
 
+            opencv_imgcodecs.imwrite(savePath+ File.separator  + "temp.jpg", _srcImg2);
+            opencv_imgcodecs.imwrite(savePath+ File.separator  + "eye_adjust.jpg", resultImg);
 
         }
         else{
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg1_fix.jpg", srcImg1);
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg2_fix.jpg", imgCV2);
+            opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg1.jpg", srcImg1);
+            opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg2.jpg", imgCV2);
 
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "temp_fix.jpg", _srcImg2);
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "result_fix.jpg", resultImg);
-            opencv_imgcodecs.imwrite(savePath+ File.separator  + "result.jpg", resultImg);
+            opencv_imgcodecs.imwrite(savePath+ File.separator  + "temp.jpg", _srcImg2);
+            opencv_imgcodecs.imwrite(savePath+ File.separator  + "mouth_adjust.jpg", resultImg);
 
         }
+
+//        opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg1.jpg", srcImg1);
+//        opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg2.jpg", imgCV2);
+//
+//        opencv_imgcodecs.imwrite(savePath+ File.separator  + "temp.jpg", _srcImg2);
+//        opencv_imgcodecs.imwrite(savePath+ File.separator  + "result_adjust.jpg", resultImg);
 
     }
 
     /**
-     * 三角图片仿射变幻
-     * 思路
-     * 1、对图1进行三角剖分
-     * 2、根据图像1的索引结果，得到图像2的三角剖分
-     * 3、计算图像1的每个三角形到图像2对应的三角形的仿射变换矩阵
-     * 4、将图1的每个三角copy到图2上面进行覆盖
-     * 5、返回覆盖后的图片数据
-     * @param imgCV1
-     * @param imgCV2
-     * @param points12f
-     * @param points22f
-     * @return
+     * 对融合之后的图像的嘴巴进行缩小
+     * 思路：
+     * 1、按照opencv识别出来的嘴巴的轮廓位点48~67
+     * 2、将对应的轮廓位点的坐标进行调节，从而实现缩小嘴巴的功能
      */
+
+    public  Pair<List<Point2f>,List<Point2f>> mouthAdjust(List<Point2f> points1, List<Point2f> points2){
+        List<Point2f> hull1 = new LinkedList<Point2f>();
+        List<Point2f> hull2 = new LinkedList<Point2f>();
+
+        //下面是进行对应的位点的坐标调整的x距离、y距离
+        float x=0;
+        float y=0;
+
+        for(int i=0;i<68;i++){
+              if(i>=48){
+                  /**
+                   * x0是缩小后的x坐标，x1是62的横坐标，x是当前点的横坐标
+                   * y0是缩小后的y坐标，y1是48的纵坐标，y是当前点的纵坐标
+                   *
+                   * 以嘴唇中心点作为判断的标准
+                   * 1、左边的横坐标：
+                   *      x0-x=(x1-x)*0.2
+                   * 2、右边的横坐标：
+                   *      x-x0=(x-x1)*0.2
+                   * 3、上边的纵坐标：
+                   *      y-y0=(y-y1)*0.2
+                   * 4、下边的纵坐标：
+                   *     y0-y=(y1-y)*0.2
+                   * 横坐标缩小1/5；
+                   * 纵坐标缩小1/5;
+                   * ===》这里可以看出来最后得到的公式之间的关系都是一样的！！！
+                   */
+                  y=(float)0.8*points1.get(i).y()+(float)0.2*points1.get(48).y();
+                  x=(float)0.2*points1.get(62).x()+(float)0.8*points1.get(i).x();
+                  hull1.add(points1.get(i));
+                  hull2.add(new Point2f(x,y));
+                  continue;
+              }
+              hull1.add(points1.get(i));
+              hull2.add(points2.get(i));
+        }
+
+        return Pair.of(hull1,hull2);
+    }
+
+
+
+
+        /**
+         * 对融合之后的图像的眼睛进行放大
+         * 思路一：
+         * 1、我们将后面的一张图的眼睛的关键点的坐标进行调整
+         * 2、然后进行三角映射
+         *
+         * 思路二：
+         * 1、针对之前的眼睛放大之后存在的却西安进行一定的修改
+         * 2、首先将之前的两个眼睛的不动点为各自的眼睛中间的点改为===》眼睛靠近鼻梁的一侧的点
+         * 3、然后每只眼睛以这个点为放大的根据，进行等比例放大
+         */
+
+
+
+    public  Pair<List<Point2f>,List<Point2f>> eyeAdjust1(List<Point2f> points1, List<Point2f> points2){
+
+        List<Point2f> hull1 = new LinkedList<Point2f>();
+        List<Point2f> hull2 = new LinkedList<Point2f>();
+
+
+
+        /**修改的数据*/
+        float y_temp=points1.get(37).y()-points1.get(41).y();
+        float x_temp=points1.get(38).x()-points1.get(37).x();
+
+        /**左眼的数据
+         *           x3
+         *    x1            x2
+         *           x4*/
+        float x1_left=points1.get(36).x();
+        float x2_left=points1.get(39).x();
+        float x3_left=points1.get(37).x()+(points1.get(38).x()-points1.get(37).x())/2;
+        float x4_left=points1.get(41).x()+(points1.get(40).x()-points1.get(41).x())/2;
+        float y1_left=points1.get(36).y();
+        float y2_left=points1.get(39).y();
+        float y3_left=points1.get(37).y();
+        float y4_left=points1.get(41).y();
+
+        /**右眼的数据
+         *           x3
+         *    x1            x2
+         *           x4*/
+        float x1_right=points1.get(42).x();
+        float x2_right=points1.get(45).x();
+        float x3_right=points1.get(43).x()+(points1.get(44).x()-points1.get(43).x())/2;
+        float x4_right=points1.get(47).x()+(points1.get(46).x()-points1.get(47).x())/2;
+        float y1_right=points1.get(42).y();
+        float y2_right=points1.get(45).y();
+        float y3_right=points1.get(43).y();
+        float y4_right=points1.get(47).y();
+
+        /**
+         * 将左右眉毛的关键点存进去；
+         * 同时将左右眼的关键点的数目翻倍，存进去
+         */
+
+        for(int i=17;i<=26;i++){
+            hull1.add(points1.get(i));
+            hull2.add(points2.get(i));
+        }
+        for(int i=0;i<4;i++){
+            hull1.add(new Point2f(x1_left+(x3_left-x1_left)/4*i,y1_left+(y3_left-y1_left)/4*i));
+          //  hull1.add(new Point2f(x1_right+(x3_right-x1_right)/4*i,y1_right+(y3_right-y1_right)/4*i));
+        }
+        for(int i=0;i<4;i++){
+            hull1.add(new Point2f(x3_left+(x2_left-x3_left)/4*i,y3_left-(y3_left-y2_left)/4*i));
+           // hull1.add(new Point2f(x3_right+(x2_right-x3_right)/4*i,y3_right-(y3_right-y2_right)/4*i));
+        }
+        for(int i=0;i<4;i++){
+            hull1.add(new Point2f(x2_left-(x2_left-x4_left)/4*i,y2_left-(y2_left-y4_left)/4*i-y_temp/2));
+           // hull1.add(new Point2f(x2_right-(x2_right-x4_right)/4*i,y2_right-(y2_right-y4_right)/4*i));
+        }
+        for(int i=0;i<4;i++){
+            hull1.add(new Point2f(x4_left-(x4_left-x1_left)/4*i,y4_left+(y1_left-y4_left)/4*i-y_temp/2));
+        }
+
+        for(int i=0;i<4;i++){
+            hull1.add(new Point2f(x1_right+(x3_right-x1_right)/4*i,y1_right+(y3_right-y1_right)/4*i));
+        }
+        for(int i=0;i<4;i++){
+            hull1.add(new Point2f(x3_right+(x2_right-x3_right)/4*i,y3_right-(y3_right-y2_right)/4*i));
+        }
+        for(int i=0;i<4;i++){
+            hull1.add(new Point2f(x2_right-(x2_right-x4_right)/4*i,y2_right-(y2_right-y4_right)/4*i-y_temp/2));
+        }
+        for(int i=0;i<4;i++){
+            hull1.add(new Point2f(x4_right-(x4_right-x1_right)/4*i,y4_right+(y1_right-y4_right)/4*i-y_temp/2));
+        }
+
+        for(int i=10;i<42;i++){
+            if(i==10||i==26){
+                hull2.add(new Point2f(hull1.get(i).x()-x_temp/2,hull1.get(i).y()));
+            }
+            if(i==18||i==34){
+                hull2.add(new Point2f(hull1.get(i).x()+x_temp/2,hull1.get(i).y()));
+            }
+            if((i>=11&&i<=17)||i>=27&&i<=33){
+                hull2.add(new Point2f(hull1.get(i).x(),hull1.get(i).y()+y_temp/3));
+            }
+            if((i>=19&&i<=25)||(i>=35&&i<=41)){
+                hull2.add(new Point2f(hull1.get(i).x(),hull1.get(i).y()-y_temp/3));
+            }
+        }
+
+
+
+        for(int i=0;i<68;i++){
+            if((i>=17&&i<=26)||(i>=36&&i<=47)){
+                continue;
+            }
+            hull1.add(points1.get(i));
+            hull2.add(points2.get(i));
+        }
+
+        return Pair.of(hull1,hull2);
+    }
+
+
+
+
+    public  Pair<List<Point2f>,List<Point2f>> eyeAdjust(List<Point2f> points1, List<Point2f> points2){
+        List<Point2f> hull1 = new LinkedList<Point2f>();
+        List<Point2f> hull2 = new LinkedList<Point2f>();
+
+        /**
+         * 先处理左边的一只眼睛
+         * 考虑将左边的眼睛的位点的坐标进行等比例的增大
+         * 方法：
+         * 1、就是将每两个位点之间增加一个关键点
+         * 2、将对应的关键点的数目翻倍，并且将眼睛的坐标从0标起————为了后面的论文里面的图的绘画
+         */
+
+
+        //这里是对应的得到中间的一个关键点的xy坐标，
+        // 但是41和36之间还是有一个关键位点的，47和42还有一个关键位点
+        for(int i=36;i<=47;i++){
+            hull1.add(points1.get(i));
+            float x=0;
+            float y=0;
+            if(i==41){
+                 x=(points1.get(41).x()+points1.get(36).x())/2;
+                 y=(points1.get(41).y()+points1.get(36).y())/2;
+            }
+            else if(i==47){
+                 x=(points1.get(42).x()+points1.get(47).x())/2;
+                 y=(points1.get(42).y()+points1.get(47).y())/2;
+            }
+            else {
+                x = (points1.get(i).x() + points1.get(i + 1).x()) / 2;
+                y = (points1.get(i).y() + points1.get(i + 1).y()) / 2;
+            }
+            hull1.add(new Point2f(x,y));
+        }
+        //接下来是将对应的hull2里面的关键点的坐标，两只眼睛分别以39，42位点
+        //为放大点进行放大，放大1.2倍
+
+
+        /**
+         * 左边的眼睛（hull1的0~11关键点）、右边的眼睛（hull2的12~23关键点）
+         * 1、原本39位点的x坐标为x1，y1、原本42位点的坐标为x1,y1
+         * 2、当前位点的x左边为x，y
+         * 3、需要扩大之后的位点的x坐标为x0，y0
+         *      ====》x1-x0=1.2*(x1-x)  ===》x0=1.2*x-0.2*x1
+         *      ====》y0=1.2*y-0.2*y1
+         */
+
+        float x=0;
+        float y=0;
+        for(int i=0;i<24;i++){
+            if(i>=0&&i<=11){
+                x=(float)1.2*hull1.get(i).x()-(float)0.2*points1.get(39).x();
+                y=(float)1.2*hull1.get(i).y()-(float)0.2*points1.get(39).y();
+            }
+            else{
+                x=(float)1.2*hull1.get(i).x()-(float)0.2*points1.get(42).x();
+                y=(float)1.2*hull1.get(i).y()-(float)0.2*points1.get(42).y();
+            }
+            hull2.add(new Point2f(x,y));
+        }
+
+        for(int i=0;i<68;i++){
+            if(i>=36&&i<=47){
+                continue;
+            }
+            hull1.add(points1.get(i));
+            hull2.add(points1.get(i));
+        }
+
+
+        return Pair.of(hull1,hull2);
+    }
+
+
+        /**
+         * 三角图片仿射变幻
+         * 思路
+         * 1、对图1进行三角剖分
+         * 2、根据图像1的索引结果，得到图像2的三角剖分
+         * 3、计算图像1的每个三角形到图像2对应的三角形的仿射变换矩阵
+         * 4、将图1的每个三角copy到图2上面进行覆盖
+         * 5、返回覆盖后的图片数据
+         * @param imgCV1
+         * @param imgCV2
+         * @param points12f
+         * @param points22f
+         * @return
+         */
     public  Pair<Mat,Mat> toWarpAffine(Mat imgCV1, Mat imgCV2, List<Point2f> points12f, List<Point2f> points22f){
         //----------------------三角剖分------------------------------
 
@@ -442,7 +654,7 @@ public class OpenCVFaceSwap {
             t2RectInt.add(new Point(t2Points[i].x() - r2.x(), t2Points[i].y() - r2.y()));
         }
         // mask 包含目标图片三个凸点的黑色矩形
-       // MatExpr maskExpr = Mat.zeros(r2.height(), r2.width(), opencv_core.CV_32FC3);
+        // MatExpr maskExpr = Mat.zeros(r2.height(), r2.width(), opencv_core.CV_32FC3);
         Mat mask = new Mat(r2.height(), r2.width(), CV_32FC3,new Scalar(0,0));
         opencv_imgproc.fillConvexPoly(mask,list2MP(t2RectInt), new Scalar(1.0, 1.0), 16, 0);
 
@@ -491,7 +703,7 @@ public class OpenCVFaceSwap {
         return points2;
     }
 
-    public Mat list2MP2d(List<Point2d> points) {
+    public  Mat list2MP2d(List<Point2d> points) {
         Mat points2 = new Mat(points.size());
         for(Point2d pf : points){
             Mat pm = new Mat(pf);
@@ -569,8 +781,6 @@ public class OpenCVFaceSwap {
          hull:输出参数，用于输出函数调用后找到的凸包
          clockwise:操作方向，当标识符为真时，输出凸包为顺时针方向，否则为逆时针方向。
          returnPoints:操作标识符，默认值为true，此时返回各凸包的各个点，否则返回凸包各点的指数，当输出数组时std::vector时，此标识被忽略。
-         ————————————————
-          原文链接：https://blog.csdn.net/keith_bb/article/details/70194073
          */
 
         //得到凸包，hull是输出的带的凸包的参数
@@ -602,47 +812,5 @@ public class OpenCVFaceSwap {
         //返回的就是两个图像的凸包的位置序列
         return  Pair.of(hull1, hull2);
     }
-
-
-
-    /**
-     * 将后端生成的图片直接传到前端
-     * @param path
-     * @param rp
-     */
-    public  void uploadPictureToAdvice(String path, HttpServletResponse rp){
-
-//        String property = System.getProperty("user.dir");
-//        String path = property + "\\src\\main\\resources\\static\\photos\\photo.jpg";
-        File imageFile = new File(path);
-        if (imageFile.exists()) {
-            FileInputStream fis = null;
-            OutputStream os = null;
-            try {
-                fis = new FileInputStream(imageFile);
-                os = rp.getOutputStream();
-                int count = 0;
-                byte[] buffer = new byte[1024 * 8];
-                while ((count = fis.read(buffer)) != -1) {
-                    os.write(buffer, 0, count);
-                    // os.flush();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    fis.close();
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-
-        System.out.println(rp);
-    }
-
 
 }
