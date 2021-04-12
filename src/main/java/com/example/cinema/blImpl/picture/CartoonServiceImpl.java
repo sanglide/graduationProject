@@ -12,6 +12,9 @@ public class CartoonServiceImpl implements CartoonService {
     OpenCVFaceSwap openCVFaceSwap;
 
 
+    @Autowired
+    UploadPhotoImpl uploadPhoto;
+   // UploadPhotoImpl uploadPhoto=new UploadPhotoImpl();
 
     public static String savePath ;
 
@@ -26,8 +29,9 @@ public class CartoonServiceImpl implements CartoonService {
 
             String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result_ps.jpg";
             System.out.println(result_path);
+            String result=uploadPhoto.uploadFromService("result_ps.jpg");
 
-            return ResponseVO.buildSuccess("result_ps.jpg");
+            return ResponseVO.buildSuccess(result);
 
         }catch (Exception e){
             System.out.println(e.toString());
@@ -49,8 +53,8 @@ public class CartoonServiceImpl implements CartoonService {
             String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result_fix.jpg";
             System.out.println(result_path);
 
-
-            return ResponseVO.buildSuccess("result_fix.jpg");
+            String result=uploadPhoto.uploadFromService("result_fix.jpg");
+            return ResponseVO.buildSuccess(result);
 
         }catch(Exception e){
             System.out.println(e.toString());
