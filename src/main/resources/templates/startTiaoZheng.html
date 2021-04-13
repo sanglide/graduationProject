@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>人脸拟合</title>
+    <title>调整形象</title>
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css"/>
     <!-- font-asesome图标库 -->
     <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
@@ -16,11 +16,13 @@
     <!-- Bootstrap 核心 JavaScript 文件 -->
     <script src="/js/bootstrap.js"></script>
     <script src="/js/request.js"></script>
-    <script src="/js/selectFix.js"></script>
+    <script src="/js/startTiaoZheng.js"></script>
 </head>
 <body>
 <div id="image-container"></div>
-<button onclick="tiaozheng()" type="button" class="btn btn-success">继续美化</button>
-<button onclick="jinru()" type="button" class="btn btn-success">跳过</button>
+<button id="start-button" onclick="record()" type="button" class="btn btn-success">开始录音</button>
+<button id="end-button" class="btn btn-lg btn-primary" disabled="disabled" onclick="stopRecord()">停止录音</button>
+<button onclick="finishPicture()" type="button" class="btn btn-success">完成！</button>
+
 </body>
 </html>

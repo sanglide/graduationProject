@@ -25,3 +25,9 @@ function getImage(data){
     let str="<img src='"+url+data+"'>"
     $('#image-container').html(str);
 }
+function tiaozheng(){
+    window.location.replace("/user/startTiaoZheng");
+}
+function jinru(){
+    window.location.replace("/user/startSelect");
+}

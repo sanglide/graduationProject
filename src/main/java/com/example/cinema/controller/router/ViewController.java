@@ -20,6 +20,11 @@ public class ViewController {
         return "selectPs";
     }
 
+    @RequestMapping(value = "/user/startTiaoZheng")
+    public String getStartTiaoZheng() {
+        return "startTiaoZheng";
+    }
+
     @RequestMapping(value = "/user/selectWhichPs")
     public String getSelectPs() {
         return "selectWhichPs";
