@@ -11,8 +11,15 @@ public class CheckFaceAndEye {
 	static CascadeClassifier eyesDetector;
 	static {
 		try{
-			faceDetector = new CascadeClassifier("D:\\openCV\\opencv\\sources\\data\\lbpcascades\\lbpcascade_frontalface.xml");
-			eyesDetector = new CascadeClassifier("D:\\openCV\\opencv\\sources\\data\\haarcascades\\haarcascade_eye_tree_eyeglasses.xml");
+			String property = System.getProperty("user.dir");
+			String path1 = property + "\\src\\main\\resources\\static\\lbpcascade_frontalface.xml";
+			String path2=property+"\\src\\main\\resources\\static\\haarcascade_eye_tree_eyeglasses.xml";
+//			faceDetector = new CascadeClassifier("D:\\openCV\\opencv\\sources\\data\\lbpcascades\\lbpcascade_frontalface.xml");
+//			eyesDetector = new CascadeClassifier("D:\\openCV\\opencv\\sources\\data\\haarcascades\\haarcascade_eye_tree_eyeglasses.xml");
+
+			faceDetector = new CascadeClassifier(path1);
+			eyesDetector = new CascadeClassifier(path2);
+
 		}catch (Exception e){
 			e.printStackTrace();
 		}

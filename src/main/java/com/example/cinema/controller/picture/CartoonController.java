@@ -20,7 +20,7 @@ public class CartoonController {
         //String id=request.getParameter("id");
         System.out.println("前端传过来的id："+id);
         String property_1 = System.getProperty("user.dir");
-        String path_real = property_1 + "\\src\\main\\resources\\static\\photos\\ertong1.jpg";
+        String path_real = property_1 + "\\src\\main\\resources\\static\\photos\\photo.jpg";
         String path_cartoon=property_1 + "\\src\\main\\resources\\static\\photos\\gongzhu_"+id+".jpg";
         return cartoonService.ps(path_real,path_cartoon);
     }
@@ -31,7 +31,7 @@ public class CartoonController {
 
         //String id=request.getParameter("id");
         String property_1 = System.getProperty("user.dir");
-        String path_real = property_1 + "\\src\\main\\resources\\static\\photos\\ertong1.jpg";
+        String path_real = property_1 + "\\src\\main\\resources\\static\\photos\\photo.jpg";
         String path_cartoon=property_1 + "\\src\\main\\resources\\static\\photos\\gongzhu_"+id+".jpg";
         return cartoonService.fix(path_real,path_cartoon);
     }
