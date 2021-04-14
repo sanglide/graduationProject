@@ -17,8 +17,6 @@ import java.util.List;
 /**
  * @ClassName: FaceDetect
  * @description: 人脸检测接口返回处理方法
- * @author: 小帅丶
- * @create: 2019-05-18
  **/
 public class FaceDetect {
 //    private static AipFace aipFace;
@@ -29,44 +27,13 @@ public class FaceDetect {
     static Facemark facemark = FacemarkLBF.create();
     static{
         try{
-            facemark.loadModel("D:\\new\\lbfmodel.yaml");
+            String property = System.getProperty("user.dir");
+            String path = property + "\\src\\main\\resources\\static\\lbfmodel.yaml";
+            facemark.loadModel(path);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-//    /**
-//     * 人脸检测并返回72关键点
-//     * @author 小帅丶
-//     * @date 2019/5/18
-//     * @param path 图片路径
-//     * @return org.opencv.core.Point[]
-//     **/
-//    public static List<Point2f> detect(String path) {
-//        List<Point2f> points;
-//        try {
-//            HashMap<String, String> option = new HashMap<String, String>();
-//            String image = Base64Util.encode(Util.readFileByBytes(path));
-//            String type = "BASE64";
-//            option.put("face_field","age,beauty,expression,face_shape,gender,glasses,landmark,landmark150,race,quality,eye_status,emotion,face_type");
-//            JSONObject jsonObject = aipFace.detect(image,type,option);
-//            com.alibaba.fastjson.JSON object = com.alibaba.fastjson.JSON.parseObject(jsonObject.toString());
-//            FaceV3DetectBean bean = com.alibaba.fastjson.JSONObject.toJavaObject(object, FaceV3DetectBean.class);
-//            int k72 = bean.getResult().getFace_list().get(0).getLandmark72().size();
-//            points = new ArrayList<Point2f>() ;
-//            Point2f pf = new Point2f();
-//            for (int i = 0; i < k72; i++) {
-//                float x = bean.getResult().getFace_list().get(0).getLandmark72().get(i).getX();
-//                float y = bean.getResult().getFace_list().get(0).getLandmark72().get(i).getY();
-//               // System.out.println(x+"="+y);
-//                points.add(new Point2f(x,y));
-//            }
-//            return points;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.out.println("错误了"+e.getMessage());
-//            return  null;
-//        }
-//    }
 
     public static List<Point2f> detect(Mat frame){
         Mat gray = new Mat();
