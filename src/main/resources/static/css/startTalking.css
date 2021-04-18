@@ -1,4 +1,12 @@
-.talking{
-    margin-left:500px;
+.talkingButton{
+    margin-left:100px;
     margin-top:20px;
+    margin-bottom: 10px;
+}
+.nextStep{
+    margin-left:100px;
+}
+.word{
+    margin-right:100px;
+    margin-left:50px;
 }

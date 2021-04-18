@@ -15,6 +15,11 @@ public class ViewController {
         return "index";
     }
 
+    @RequestMapping(value = "/finish")
+    public String getFinish() {
+        return "finish";
+    }
+
     @RequestMapping(value = "/user/selectPs")
     public String getSelectFace() {
         return "selectPs";

@@ -12,22 +12,22 @@ import java.util.List;
 
 public class ConvertImageContent {
     String background;
-    ConvertImageContent(String background){
+    public ConvertImageContent(String background){
         this.background=background;
     }
     public static void main(String[] args) throws IOException {
         /**这个函数就是输入一个字符串，生成一张图片*/
-        List<String> info1=new ArrayList<String>(Arrays.asList("帽子", "外婆","狼"));
-        List<String> info2=new ArrayList<String>(Arrays.asList("o1", "o2"));
-        List<String> info3=new ArrayList<String>(Arrays.asList("o1", "o2"));
-        List<String> info4=new ArrayList<String>(Arrays.asList("o1", "o2"));
-        List<String> info5=new ArrayList<String>(Arrays.asList("o1", "o2"));
-        List<String> info6=new ArrayList<String>(Arrays.asList("o1", "o2"));
-        List<String> info7=new ArrayList<String>(Arrays.asList("o1", "o2"));
-        List<String> info8=new ArrayList<String>(Arrays.asList("o1", "o2"));
+        List<String> info1=new ArrayList<String>(Arrays.asList("小女孩","外婆","帽子"));
+        List<String> info2=new ArrayList<String>(Arrays.asList("妈妈", "小女孩","酒","蛋糕"));
+        List<String> info3=new ArrayList<String>(Arrays.asList("小女孩","狼"));
+        List<String> info4=new ArrayList<String>(Arrays.asList("外婆", "狼"));
+        List<String> info5=new ArrayList<String>(Arrays.asList("扮成外婆的狼", "小女孩"));
+        List<String> info6=new ArrayList<String>(Arrays.asList("扮成外婆的狼", "猎人"));
+        List<String> info7=new ArrayList<String>(Arrays.asList("猎人", "小女孩","外婆","剪开肚子的狼"));
+        List<String> info8=new ArrayList<String>(Arrays.asList("猎人", "小女孩","外婆","蛋糕","酒"));
 
-        ConvertImageContent convertImageContent=new ConvertImageContent("ocean");
-        convertImageContent.convertImage(info1);
+        ConvertImageContent convertImageContent=new ConvertImageContent("tree");
+        convertImageContent.convertImage(info7);
 
     }
     public String convertImage(List<String> info) throws IOException {
@@ -43,11 +43,11 @@ public class ConvertImageContent {
             coverImage(temp);
         }
         //本地存储的图片名为result11.png，传到服务气上并返回名字
-//        UploadImageImlp uploadImageImlp=new UploadImageImlp();
-//        String result=uploadImageImlp.uploadFromService("result11.png");
-//        System.out.println("此次生成的图片的名字："+result);
-//        return result;
-        return "";
+        UploadImageImlp uploadImageImlp=new UploadImageImlp();
+        String result=uploadImageImlp.uploadFromService("result11.png");
+        System.out.println("此次生成的图片的名字："+result);
+        return result;
+//        return "";
     }
     public void coverImage(String temp) throws IOException {
         //下载temp所在素材；
@@ -68,10 +68,10 @@ public class ConvertImageContent {
             }
         }
         System.out.println(temp+"的类型是："+imageType);
-        List<Integer> position=getPosition(imageType);
+        List<Integer> position=getPosition(imageType,temp);
         int x=position.get(0);
         int y=position.get(1);
-        // todo:将temp叠到result11上
+        // 将temp叠到result11上
         String finiPath=rootPath+"/"+imageType+"/"+temp+".png";
         System.out.println("开始叠图了,x="+x+",y="+y+",finiPath="+finiPath);
         BufferedImage buffImg = watermark(new File("./image/result11.png"),
@@ -80,11 +80,41 @@ public class ConvertImageContent {
         // 输出水印图片
         generateWaterFile(buffImg, "./image/result11.png");
     }
-    private List<Integer> getPosition(String type){
-        //todo:参数是这个图片元素的类型，返回一个二元list，存储应该返回的x、y坐标
+    private List<Integer> getPosition(String type,String temp){
+        //参数是这个图片元素的类型，返回一个二元list，存储应该返回的x、y坐标
         List<Integer> re=new ArrayList<Integer>();
-        re.add(new Integer(50));
-        re.add(new Integer(10));
+        if(type.equals("people")){
+            if(temp.equals("小红帽")|temp.equals("小女孩")){
+                re.add(new Integer(370));
+                re.add(new Integer(150));
+            }else if(temp.equals("外婆")|temp.equals("妈妈")|temp.equals("扮成外婆的狼")){
+                re.add(new Integer(130));
+                re.add(new Integer(125));
+            }else if(temp.equals("狼")){
+                re.add(new Integer(250));
+                re.add(new Integer(150));
+            }else if(temp.equals("猎人")){
+                re.add(new Integer(250));
+                re.add(new Integer(150));
+            }else if(temp.equals("剪开肚子的狼")){
+                re.add(new Integer(0));
+                re.add(new Integer(280));
+            }
+        }else if(type.equals("hand")){
+            if(temp.equals("蛋糕")){
+                re.add(new Integer(470));
+                re.add(new Integer(290));
+            }else if(temp.equals("帽子")){
+                re.add(new Integer(320));
+                re.add(new Integer(225));
+            }else if(temp.equals("酒")){
+                re.add(new Integer(400));
+                re.add(new Integer(235));
+            }
+
+        }
+
+
         return re;
     }
     private void generateWaterFile(BufferedImage buffImg, String savePath) {

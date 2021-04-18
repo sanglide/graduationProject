@@ -42,8 +42,6 @@ public class TalkingServiceImpl implements TalkingService {
         System.out.println("开始进入调用api的过程");
         // 示例-1：标准用法
         String re=standard();
-        //ToDo:这里已经获得了一个分过句的文字的list，接下来就是调用nlp的方法
-        // 1、生成显示的简略版文字说明；2、生成需要贴到图里的部分的文字
 
         // 示例-2：使用扩展业务参数
 //        String re2=businessExtraParams();

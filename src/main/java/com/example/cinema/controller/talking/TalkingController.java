@@ -2,7 +2,9 @@ package com.example.cinema.controller.talking;
 
 import com.example.cinema.bl.talking.GenerateImages;
 import com.example.cinema.bl.talking.TalkingService;
+import com.example.cinema.blImpl.talking.ConvertImageContent;
 import com.example.cinema.blImpl.talking.GenerateImageImlp;
+import com.example.cinema.blImpl.talking.NlpRequest;
 import com.example.cinema.blImpl.talking.UploadImageImlp;
 import com.example.cinema.po.ImageContent;
 import com.example.cinema.vo.ResponseVO;
@@ -14,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController()
 public class TalkingController {
@@ -46,24 +51,19 @@ public class TalkingController {
         FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
 
         /**将音频文件转码成文字*/
-//        String result=talkingService.wavToString();
+        //todo:这里调试的时候改掉注释
+//        String result1=talkingService.wavToString();
+//        NlpRequest nlpRequest=new NlpRequest();
+//        String result=nlpRequest.getWordShow(result1);
+//        List<String> imageList=nlpRequest.getImageList(result);
+//        ConvertImageContent convertImageContent=new ConvertImageContent(background);
+//        String HashfileName=convertImageContent.convertImage(imageList);
+
         String result="为了节省免费服务器，就暂时关掉了，\n" +
                 "如需要使用语音转文字就将TalkingController的49行注释去掉";
-
-        /**将文字转成图像*/
-        /**todo：根据文字内容构建一个imageContent对象，这个应该是zyc做的
-         * todo：根据生成的文字result提取简要的说明字符串*/
-        ImageContent imageContent=new ImageContent();
-        imageContent.setBackground(background);
-        imageContent.setFileName(pageName);
-
-        String savefileName=generateImages.generateImage(imageContent);
-        System.out.println("生成的图片名本地路径:"+savefileName);
-        System.out.println("结束生成图片");
-
-        /**将图像上传七牛云并返回哈希值（文件名）*/
-        UploadImageImlp upload=new UploadImageImlp();
-        String HashfileName=upload.uploadFromService(savefileName);
+        List<String> info2=new ArrayList<String>(Arrays.asList("妈妈", "小女孩","酒","蛋糕"));
+        ConvertImageContent convertImageContent=new ConvertImageContent(background);
+        String HashfileName=convertImageContent.convertImage(info2);
 
         return result+"&"+HashfileName;
     }

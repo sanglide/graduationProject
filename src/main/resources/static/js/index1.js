@@ -84,6 +84,10 @@ function stopRecord(){
     console.log(waveBuffer);
     playRecord(waveBuffer);
     // console.log(leftData,rightData);
+    let startButton=document.getElementById("start-button");                 // 先导航到INPUT标签
+    let endButton=document.getElementById("end-button");
+    endButton.setAttribute("disabled","disabled")
+    startButton.removeAttribute("disabled")
 }
 function interleaveLeftAndRight(left,right){
     let totalLength=left.length+right.length;
@@ -227,4 +231,8 @@ function storageName(fileName){
             alert(JSON.stringify(error));
         }
     );
+}
+
+function finishCreate(){
+    window.location.replace("/finish");
 }
