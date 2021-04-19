@@ -22,7 +22,9 @@ function getPs(){
 function getImage(data){
     console.log("进入插字符串的方法："+data)
     let url="http://qqd3in7iz.hn-bkt.clouddn.com/"
-    let str="<img src='"+url+data+"'>"
+    let str="<div class=\"border\" >" +
+        "<div class='frame' >" +
+        "<div class='image' style='background-image: url("+url+data+")'></div></div></div>"
     $('#image-container').html(str);
 }
 function tiaozheng(){

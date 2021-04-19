@@ -22,8 +22,7 @@ function getImage(data){
     $('#image-container').html(str);
     document.getElementById('camera-button1').style.display = "none";
     // document.getElementById('camera-button2').style.display = "none";
-    document.getElementById('camera-button3').style.display = "block";
-    document.getElementById('camera-button4').style.display = "block";
+    document.getElementById('button-container').style.display = "block";
 }
 function picturePs(){
     window.location.replace("/user/selectWhichPs");

@@ -236,3 +236,11 @@ function storageName(fileName){
 function finishCreate(){
     window.location.replace("/finish");
 }
+function finishCreate2(){
+    let num=parseInt(page.substring(4,page.length));
+    console.log("num="+num);
+    num++;
+    let newPage="page"+num;
+    console.log("newPage"+newPage);
+    window.location.replace("/user/startTalking?place="+backgroundName+"&page="+newPage);
+}
