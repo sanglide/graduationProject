@@ -12,7 +12,11 @@ function getPs(){
             var data = res.content||[];
             console.log("后端返回的东西在这里："+res)
             console.log("后端返回的数据在这里"+data)
-            getImage(data);
+            if(data=="false"){
+                window.location.replace("/false");
+            }else{
+                getImage(data);
+            }
         },
         function (error) {
             alert(JSON.stringify(error));

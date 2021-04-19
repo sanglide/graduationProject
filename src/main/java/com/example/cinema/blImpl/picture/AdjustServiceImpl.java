@@ -20,7 +20,7 @@ public class AdjustServiceImpl implements AdjustService {
         boolean isTrue=eyeAndMouthAdjust.findPoints(path, savePath, type);
 
         if(isTrue==false){
-            return ResponseVO.buildFailure("false");
+            return ResponseVO.buildSuccess("false");
         }
         String result=uploadPhoto.uploadFromService("eye_adjust.jpg");
         return ResponseVO.buildSuccess(result);
@@ -31,7 +31,7 @@ public class AdjustServiceImpl implements AdjustService {
         boolean isTrue=eyeAndMouthAdjust.findPoints(path,savePath,type);
 
         if(isTrue==false){
-            return ResponseVO.buildFailure("false");
+            return ResponseVO.buildSuccess("false");
         }
         String result=uploadPhoto.uploadFromService("mouth_adjust.jpg");
         return ResponseVO.buildSuccess(result);

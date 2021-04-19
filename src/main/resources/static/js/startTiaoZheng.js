@@ -184,8 +184,12 @@ function saveContent (content, fileName) {
             var data = res.content||[];
             console.log("后端返回的东西在这里："+res)
             console.log("后端返回的数据在这里"+data)
-            viewImage(data);
 
+            if(data=="false"){
+                window.location.replace("/false");
+            }else{
+                viewImage(data);
+            }
         },
         error: function (error) {
             alert("请刷新一遍重新录制，试一试说短一点~~");

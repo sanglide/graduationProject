@@ -20,6 +20,11 @@ public class ViewController {
         return "finish";
     }
 
+    @RequestMapping(value = "/false")
+    public String getFalse() {
+        return "false";
+    }
+
     @RequestMapping(value = "/user/selectPs")
     public String getSelectFace() {
         return "selectPs";

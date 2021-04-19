@@ -28,7 +28,7 @@ public class CartoonServiceImpl implements CartoonService {
             boolean isTrue=openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",false);
 
             if(isTrue==false){
-                return ResponseVO.buildFailure("false");
+                return ResponseVO.buildSuccess("false");
             }
             String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result_ps.jpg";
             System.out.println(result_path);
@@ -54,7 +54,7 @@ public class CartoonServiceImpl implements CartoonService {
             boolean isTrue=openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",true);
 
             if(isTrue==false){
-                return ResponseVO.buildFailure("false");
+                return ResponseVO.buildSuccess("false");
             }
 
 
