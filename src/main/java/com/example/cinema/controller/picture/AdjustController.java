@@ -90,7 +90,7 @@ public class AdjustController {
         if(isHasEye==true){
             return adjustService.adjustEye(path,savePath,"eye");
         }
-        else if(isHasMouth==true){
+        if(isHasMouth==true){
             return adjustService.adjustMouth(path,savePath,"mouth");
         }
         else{

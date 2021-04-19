@@ -25,8 +25,11 @@ public class CartoonServiceImpl implements CartoonService {
             String savePath = property_1 + "\\src\\main\\resources\\static\\photos\\";
 
             System.out.println(path_cartoon);
-            openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",false);
+            boolean isTrue=openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",false);
 
+            if(isTrue==false){
+                return ResponseVO.buildFailure("false");
+            }
             String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result_ps.jpg";
             System.out.println(result_path);
             String result=uploadPhoto.uploadFromService("result_ps.jpg");
@@ -48,7 +51,12 @@ public class CartoonServiceImpl implements CartoonService {
             String savePath = property_1 + "\\src\\main\\resources\\static\\photos\\";
 
             System.out.println(path_cartoon);
-            openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",true);
+            boolean isTrue=openCVFaceSwap.faceMerge(path_real,path_cartoon,savePath,"opencv",true);
+
+            if(isTrue==false){
+                return ResponseVO.buildFailure("false");
+            }
+
 
             String result_path=property_1+"\\src\\main\\resources\\static\\photos\\result_fix.jpg";
             System.out.println(result_path);
