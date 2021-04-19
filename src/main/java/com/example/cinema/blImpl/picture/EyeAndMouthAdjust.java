@@ -37,7 +37,7 @@ public class EyeAndMouthAdjust {
      * @param path
      * @param type
      */
-    public  void findPoints(String imgPath1,String path,String type){
+    public  boolean findPoints(String imgPath1,String path,String type){
         savePath = path;
         // 两张图片地址
         String path1 = imgPath1;
@@ -46,7 +46,7 @@ public class EyeAndMouthAdjust {
         Mat imgCV2 = opencv_imgcodecs.imread(path1);
         if (null == imgCV1 || imgCV1.cols() <= 0 || null == imgCV2 || imgCV2.cols() <= 0) {
             System.out.println("There is wrong with images");
-            return;
+            return false;
         }
 
         //下面根据opencv识别出对应的关键点
@@ -146,6 +146,8 @@ public class EyeAndMouthAdjust {
             opencv_imgcodecs.imwrite(savePath+ File.separator  + "mouth_adjust.jpg", resultImg);
 
         }
+
+        return true;
 
 //        opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg1.jpg", srcImg1);
 //        opencv_imgcodecs.imwrite(savePath+ File.separator  + "srcImg2.jpg", imgCV2);

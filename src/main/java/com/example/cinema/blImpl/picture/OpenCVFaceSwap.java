@@ -49,7 +49,7 @@ public class OpenCVFaceSwap {
      * @param type
      * @param jingxi
      */
-    public  void faceMerge(String imgPath1,String imgPath2,String path,String type,boolean jingxi){
+    public  boolean faceMerge(String imgPath1,String imgPath2,String path,String type,boolean jingxi){
         savePath = path;
         // 两张图片地址
         String path1 = imgPath1;
@@ -60,7 +60,7 @@ public class OpenCVFaceSwap {
 
         if (null == imgCV1 || imgCV1.cols() <= 0 || null == imgCV2 || imgCV2.cols() <= 0) {
             System.out.println("There is wrong with images");
-            return;
+            return false;
         }
 
         //下面根据opencv识别出对应的关键点
@@ -183,6 +183,9 @@ public class OpenCVFaceSwap {
             opencv_imgcodecs.imwrite(savePath+ File.separator  + "result.jpg", resultImg);
 
         }
+
+
+        return true;
 
     }
 

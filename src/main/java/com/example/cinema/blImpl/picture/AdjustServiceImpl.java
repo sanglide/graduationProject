@@ -17,16 +17,22 @@ public class AdjustServiceImpl implements AdjustService {
 
     @Override
     public ResponseVO adjustEye(String path, String savePath, String type){
-        eyeAndMouthAdjust.findPoints(path, savePath, type);
+        boolean isTrue=eyeAndMouthAdjust.findPoints(path, savePath, type);
 
+        if(isTrue==false){
+            return ResponseVO.buildFailure("false");
+        }
         String result=uploadPhoto.uploadFromService("eye_adjust.jpg");
         return ResponseVO.buildSuccess(result);
     }
 
     @Override
     public ResponseVO adjustMouth(String path, String savePath, String type){
-        eyeAndMouthAdjust.findPoints(path,savePath,type);
+        boolean isTrue=eyeAndMouthAdjust.findPoints(path,savePath,type);
 
+        if(isTrue==false){
+            return ResponseVO.buildFailure("false");
+        }
         String result=uploadPhoto.uploadFromService("mouth_adjust.jpg");
         return ResponseVO.buildSuccess(result);
     }

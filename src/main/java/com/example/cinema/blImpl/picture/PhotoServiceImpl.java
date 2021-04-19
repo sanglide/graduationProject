@@ -49,8 +49,8 @@ public class PhotoServiceImpl implements PhotoService {
 
             CascadeClassifier faceCascade = new CascadeClassifier();
             String property_1 = System.getProperty("user.dir");
-//            String path_1 = property_1 + "\\src\\main\\resources\\static\\haarcascade_frontalface_alt.xml";
-            String path_1 = "D:\\app\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml";
+            String path_1 = property_1 + "\\src\\main\\resources\\static\\haarcascade_frontalface_alt.xml";
+//            String path_1 = "D:\\app\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml";
 
             // 获取模型文件
           //  faceCascade.load("D:\\app\\opencv\\build\\etc\\haarcascades\\haarcascade_frontalface_alt.xml");
